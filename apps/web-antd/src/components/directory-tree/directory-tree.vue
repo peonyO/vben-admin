@@ -60,7 +60,7 @@ defineExpose({
     <DirectoryTree
       v-model:expanded-keys="treeExpandedKeys"
       v-model:select-key="modelValue"
-      :context-menu="contextmenu"
+      :contextmenu="contextmenu"
       :tree-data="treeData"
       class="flex-1"
       @handle-menu-item="handleMenuItem"
@@ -76,7 +76,7 @@ defineExpose({
     <DirectoryTree
       v-model:expanded-keys="treeExpandedKeys"
       v-model:select-key="modelValue"
-      :context-menu="contextmenu"
+      :contextmenu="contextmenu"
       :tree-data="treeData"
       @handle-menu-item="handleMenuItem"
     />

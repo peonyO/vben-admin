@@ -1,26 +1,34 @@
 <script lang="ts" setup>
 import { Page } from '@vben/common-ui';
 
-import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
-import { UPLOAD_FILE_TYPE } from '#/components/upload';
+import { defaultFormConfig, useVbenForm } from '#/adapter/form';
+import { fileUploadRule, Upload, UPLOAD_FILE_TYPE } from '#/components/upload';
 
-const gridOptions: VxeGridProps = {
-  columns: [
+const [Form] = useVbenForm({
+  ...defaultFormConfig,
+  schema: [
     {
-      title: '图片',
-      width: 100,
-      field: 'image',
-      cellRender: {
-        name: 'CellFile',
-        props: { fileType: UPLOAD_FILE_TYPE.PICTURE },
+      formItemClass: 'p-0',
+      labelWidth: 0,
+      component: 'Divider',
+      fieldName: 'divider',
+    },
+    {
+      component: 'Input',
+      fieldName: 'divider',
+    },
+    {
+      component: 'Upload',
+      componentProps: {
+        fileType: UPLOAD_FILE_TYPE.PICTURE,
+        maxSize: 200,
+        aspectRatio: 1,
       },
+      fieldName: 'image',
+      label: '上传文件',
+      rules: fileUploadRule(),
     },
   ],
-  data: [{ image: 'http://10.0.15.0:8888/file/image.png' }],
-};
-
-const [Grid] = useVbenVxeGrid({
-  gridOptions,
 });
 </script>
 
@@ -29,6 +37,10 @@ const [Grid] = useVbenVxeGrid({
     description="支持多语言，主题功能集成切换等"
     title="Ant Design Vue组件使用演示"
   >
-    <Grid />
+    <Form>
+      <template #image="slotProps">
+        <Upload v-bind="slotProps" />
+      </template>
+    </Form>
   </Page>
 </template>

@@ -43,7 +43,7 @@ function clickMenuItem(options: ClickMenuItem) {
     :tree-data="treeData"
   >
     <template #title="{ data }">
-      <Dropdown :disabled="!!contextmenu?.length" :trigger="['contextmenu']">
+      <Dropdown :disabled="!contextmenu?.length" :trigger="['contextmenu']">
         <div class="flex items-center">
           <img
             v-if="data.iconSrc"

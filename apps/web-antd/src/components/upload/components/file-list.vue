@@ -21,7 +21,8 @@ function deleteFile(id: string) {
 <template>
   <TransitionGroup
     v-if="fileList && fileList.length > 0"
-    class="border-border relative w-full rounded-lg border p-[10px]"
+    :class="{ 'border-destructive': $attrs.isInValid }"
+    class="border-border relative w-full rounded-lg border p-[10px] transition-colors"
     name="list"
     tag="ul"
   >

@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from 'vue'; // 导入 Vue 的响应式 API
 
-import { MdiFileDelete, PHAudio, PHImage, PhVideo } from '@vben/icons'; // 导入图标组件
+import {
+  MdiFileDelete,
+  MdiReload,
+  PHAudio,
+  PHImage,
+  PhVideo,
+} from '@vben/icons'; // 导入图标组件
 import { isHttpUrl, isString } from '@vben/utils'; // 导入工具函数
 
 import { Progress } from 'ant-design-vue'; // 导入进度条组件
@@ -20,7 +26,7 @@ const emits = defineEmits<{
 // 定义 file 模型，用于双向绑定文件信息
 const file = defineModel<FileItem>('file');
 
-const fileType = inject<UPLOAD_FILE_TYPE>('fileType');
+const fileType = inject<UPLOAD_FILE_TYPE>('fileType', UPLOAD_FILE_TYPE.PICTURE);
 
 // 定义上传进度和状态的响应式引用
 const progress = ref(0); // 上传进度
@@ -47,10 +53,10 @@ const statusColor = computed(() => {
       return 'hsl(var(--destructive-500))'; // 失败状态的颜色
     }
     case UPLOAD_FILE_STATUS.SUCCESS: {
-      return 'hsl(var(--primary))'; // 成功状态的颜色
+      return 'hsl(var(--primary-500))'; // 成功状态的颜色
     }
     case UPLOAD_FILE_STATUS.UPLOADING: {
-      return '#52c41a'; // 上传中状态的颜色
+      return 'hsl(var(--yellow-500))'; // 上传中状态的颜色
     }
     default: {
       return ''; // 默认颜色
@@ -67,14 +73,23 @@ async function upload() {
     // 为了兼容动画执行完成
     setTimeout(() => {
       if (!file.value) return; // 如果没有文件则返回
-      uploadStatus.value = UPLOAD_FILE_STATUS.SUCCESS; // 设置状态为成功
-      file.value = { ...file.value, file: '' }; // 更新文件信息
+      uploadStatus.value = UPLOAD_FILE_STATUS.FAIL; // 设置状态为成功
+      progress.value = 0;
+      // file.value = { ...file.value, file: '' }; // 更新文件信息
     }, 240);
   } catch {
     uploadStatus.value = UPLOAD_FILE_STATUS.FAIL; // 上传失败时设置状态为失败
+    progress.value = 0;
   }
 }
 
+// 重新上传
+function reloadUpload() {
+  uploadStatus.value = UPLOAD_FILE_STATUS.UPLOADING;
+  upload();
+}
+
+// 删除文件
 function deleteFile() {
   if (file.value) {
     emits('delete', file.value.id);
@@ -99,8 +114,8 @@ function deleteFile() {
         :src="file.file"
       />
     </template>
-    <template v-else-if="uploadStatus === UPLOAD_FILE_STATUS.UPLOADING">
-      <div class="relative flex flex-1 items-center justify-center">
+    <div class="relative flex flex-1 items-center justify-center">
+      <template v-if="uploadStatus === UPLOAD_FILE_STATUS.UPLOADING">
         <!-- 上传中显示的文本 -->
         <span>正在上传中...</span>
         <Progress
@@ -111,21 +126,27 @@ function deleteFile() {
           class="pointer-events-none absolute bottom-[-50%] mx-2 my-0"
           status="active"
         />
-      </div>
-    </template>
-    <template v-else-if="uploadStatus === UPLOAD_FILE_STATUS.FAIL">
-      <!-- 上传失败时显示的文本 -->
-      <span>上传失败，请删除后重新上传</span>
-    </template>
-    <Transition mode="out-in">
-      <!-- 删除图标 -->
-      <div
-        v-if="uploadStatus !== UPLOAD_FILE_STATUS.UPLOADING"
-        class="cursor-pointer"
-        @click="deleteFile"
-      >
-        <MdiFileDelete class="text-destructive-500 text-[22px]" />
-      </div>
-    </Transition>
+      </template>
+      <template v-if="uploadStatus === UPLOAD_FILE_STATUS.FAIL">
+        <!-- 上传失败时显示的文本 -->
+        <span>上传失败</span>
+      </template>
+    </div>
+    <!-- 重新上传 -->
+    <div
+      v-if="uploadStatus === UPLOAD_FILE_STATUS.FAIL"
+      class="mr-1 cursor-pointer"
+      @click="reloadUpload"
+    >
+      <MdiReload class="text-destructive-500 text-[22px]" />
+    </div>
+    <!-- 删除图标 -->
+    <div
+      v-if="uploadStatus !== UPLOAD_FILE_STATUS.UPLOADING"
+      class="cursor-pointer"
+      @click="deleteFile"
+    >
+      <MdiFileDelete class="text-destructive-500 text-[22px]" />
+    </div>
   </li>
 </template>

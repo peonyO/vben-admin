@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MenuClickEventHandler } from 'ant-design-vue/es/menu/src/interface';
 
-import { computed, provide, ref, watch } from 'vue'; // 导入 Vue 的 computed 和 ref 函数
+import { computed, onMounted, provide, ref, useAttrs, watch } from 'vue'; // 导入 Vue 的 computed 和 ref 函数
 
 import { isHttpUrl, isString } from '@vben/utils'; // 导入工具函数
 
@@ -14,6 +14,7 @@ import {
   checkLocalFiles,
   contextmenuList,
   getUid,
+  UPLOAD_FILE_TYPE,
   UPLOAD_TYPE,
 } from './helper'; // 导入上传文件类型、检查文件和获取唯一 ID 的辅助函数
 import { type FileItem, type UploadProps } from './types'; // 导入类型定义
@@ -30,6 +31,29 @@ const props = withDefaults(defineProps<Props>(), {
   type: UPLOAD_TYPE.ALL, // 默认上传类型为 ALL
 });
 
+const emits = defineEmits<{
+  (event: 'change', uploadFiles: string): void;
+}>();
+
+const $attrs = useAttrs();
+
+const text = computed(() => {
+  switch (props.fileType) {
+    case UPLOAD_FILE_TYPE.AUDIO: {
+      return '上传音频';
+    }
+    case UPLOAD_FILE_TYPE.PICTURE: {
+      return '上传图片';
+    }
+    case UPLOAD_FILE_TYPE.VIDEO: {
+      return '上传视频';
+    }
+    default: {
+      return '';
+    }
+  }
+});
+
 provide('fileType', props.fileType);
 
 // 定义一个模型，用于双向绑定组件的值
@@ -39,6 +63,18 @@ const uploadFiles = defineModel<string>('value');
 const fileList = ref<FileItem[]>([]);
 
 let isInternalChange: boolean = false; // 标记是否为内部变化
+
+onMounted(() => {
+  if (uploadFiles.value) {
+    fileList.value = uploadFiles.value
+      ? uploadFiles.value?.split(',').map((item) => ({
+          file: item,
+          id: getUid(), // 生成唯一 ID
+        }))
+      : [];
+    emits('change', uploadFiles.value || '');
+  }
+});
 
 // 监听 uploadFiles 的变化
 watch(
@@ -54,8 +90,8 @@ watch(
         : [];
     }
     isInternalChange = false; // 重置标记
+    emits('change', uploadFiles.value || '');
   },
-  { immediate: true },
 );
 
 // 监听 fileList 的变化
@@ -169,21 +205,22 @@ function libUpload(files: string[]) {
   <div class="flex w-full max-w-[300px] flex-col gap-2">
     <Dropdown v-if="!!canNumber" :trigger="['click', 'contextmenu']">
       <div
+        :class="{ '!border-destructive !text-destructive': $attrs.isInValid }"
         class="drag border-border relative box-border flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-[1px] border-dashed p-[10px]"
         @dragenter="handleDragenter"
         @dragleave="handleDragleave"
         @dragover="handleDragover"
         @drop="handleDrop"
       >
-        <p class="bg-transparent text-center leading-[24px]">
-          <span>点击上传</span>
+        <p class="bg-transparent text-center leading-[22px]">
+          <span>{{ text }}</span>
         </p>
       </div>
       <template #overlay>
         <Menu :items="contextmenuList" @click="handleClickMenu" />
       </template>
     </Dropdown>
-    <FileList v-model:file-list="fileList" />
+    <FileList v-model:file-list="fileList" v-bind="$attrs" />
   </div>
   <LocalChooseFile
     ref="localChooseFileRef"

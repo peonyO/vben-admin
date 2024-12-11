@@ -35,3 +35,5 @@ export const PhVideo = createIconifyIcon('ph:file-video-duotone');
 export const PHAudio = createIconifyIcon('ph:file-audio-duotone');
 
 export const PHImage = createIconifyIcon('ph:file-image-duotone');
+
+export const MdiReload = createIconifyIcon('mdi:reload');

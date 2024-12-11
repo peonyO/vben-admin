@@ -138,7 +138,10 @@ export function getUid() {
 
 /** upload form rules 当 value 中包含 file 代表正在上传或者上传失败 */
 export function fileUploadRule() {
-  return z.string().refine((value) => !value.includes('file'), {
-    message: '请检查文件是否上传成功！',
-  });
+  return z
+    .string()
+    .min(1, '请上传文件')
+    .refine((value) => !value.includes('file'), {
+      message: '请检查文件是否上传成功！',
+    });
 }
