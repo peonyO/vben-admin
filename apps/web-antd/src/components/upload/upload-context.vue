@@ -54,6 +54,7 @@ watch(
     }
     isInternalChange = false; // 重置标记
   },
+  { immediate: true },
 );
 
 // 监听 fileList 的变化

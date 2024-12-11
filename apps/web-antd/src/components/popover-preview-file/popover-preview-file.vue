@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 import { Button, Popover } from 'ant-design-vue';
 
 import { UPLOAD_FILE_TYPE } from '../upload/helper';
@@ -7,6 +9,23 @@ import { PictureContext } from './components/picture-context';
 import { VideoContext } from './components/video-context';
 
 const props = defineProps<{ fileType?: UPLOAD_FILE_TYPE; src?: string }>();
+
+const text = computed(() => {
+  switch (props.fileType) {
+    case UPLOAD_FILE_TYPE.AUDIO: {
+      return '查看音频';
+    }
+    case UPLOAD_FILE_TYPE.PICTURE: {
+      return '查看图片';
+    }
+    case UPLOAD_FILE_TYPE.VIDEO: {
+      return '查看视频';
+    }
+    default: {
+      return '';
+    }
+  }
+});
 </script>
 
 <template>
@@ -34,7 +53,7 @@ const props = defineProps<{ fileType?: UPLOAD_FILE_TYPE; src?: string }>();
         </div>
       </template>
       <slot>
-        <Button size="small" type="link">查看文件</Button>
+        <Button size="small" type="link">{{ text }}</Button>
       </slot>
     </Popover>
   </div>
