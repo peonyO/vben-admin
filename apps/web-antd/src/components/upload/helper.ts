@@ -1,5 +1,3 @@
-import type { AxiosProgressEvent } from '@vben/request';
-
 import type { UploadProps } from './types';
 
 import { h } from 'vue';
@@ -9,7 +7,6 @@ import { MdiCloudUpload, MdiFolderUpload } from '@vben/icons';
 import { message } from 'ant-design-vue';
 
 import { z } from '#/adapter/form';
-import { uploadFileApi } from '#/api';
 
 /**
  * 上传类型枚举
@@ -125,23 +122,6 @@ export async function checkLocalFiles(
     }
   }
   return checkSucFiles; // 返回符合条件的文件数组
-}
-
-/**
- * 上传文件的异步函数
- * @param file - 要上传的文件对象
- * @param onUploadProgress - 可选的上传进度回调函数
- * @returns 返回上传后的预览 URL
- */
-export async function uploadFile(
-  file: File,
-  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
-) {
-  // 调用上传文件的 API，并传入文件、空对象和进度回调
-  const result = await uploadFileApi(file, onUploadProgress);
-
-  // 返回上传后的预览 URL
-  return result.data.previewUrl;
 }
 
 // 获取当前时间戳

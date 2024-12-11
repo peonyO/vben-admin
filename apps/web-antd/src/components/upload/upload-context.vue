@@ -46,11 +46,12 @@ watch(
   () => {
     if (!isInternalChange) {
       // 如果不是内部变化，更新文件列表
-      fileList.value =
-        uploadFiles.value?.split(',').map((item) => ({
-          file: item,
-          id: getUid(), // 生成唯一 ID
-        })) || [];
+      fileList.value = uploadFiles.value
+        ? uploadFiles.value?.split(',').map((item) => ({
+            file: item,
+            id: getUid(), // 生成唯一 ID
+          }))
+        : [];
     }
     isInternalChange = false; // 重置标记
   },

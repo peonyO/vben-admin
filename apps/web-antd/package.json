@@ -26,6 +26,7 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@types/howler": "^2.2.12",
     "@vben/access": "workspace:*",
     "@vben/common-ui": "workspace:*",
     "@vben/constants": "workspace:*",
@@ -43,7 +44,9 @@
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",
+    "howler": "^2.2.4",
     "pinia": "catalog:",
+    "video.js": "^8.21.0",
     "vue": "catalog:",
     "vue-router": "catalog:"
   }

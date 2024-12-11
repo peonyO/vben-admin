@@ -4,6 +4,8 @@ import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
 
 import { Button, Image } from 'ant-design-vue';
 
+import { PopoverPreviewFile } from '#/components/popover-preview-file';
+
 import { useVbenForm } from './form';
 
 setupVbenVxeTable({
@@ -53,6 +55,18 @@ setupVbenVxeTable({
           { size: 'small', type: 'link' },
           { default: () => props?.text },
         );
+      },
+    });
+
+    // 表格配置项可以用 cellRender: { name: 'CellLink' },
+    vxeUI.renderer.add('CellFile', {
+      renderTableDefault(renderOpts, params) {
+        const { props } = renderOpts;
+        const { column, row } = params;
+        return h(PopoverPreviewFile, {
+          fileType: props?.fileType,
+          src: row[column.field],
+        });
       },
     });
 

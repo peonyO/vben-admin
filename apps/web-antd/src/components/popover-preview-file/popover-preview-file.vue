@@ -3,12 +3,13 @@ import { computed } from 'vue';
 
 import { Button, Popover } from 'ant-design-vue';
 
-import { UPLOAD_FILE_TYPE } from '../upload/helper';
+import { UPLOAD_FILE_TYPE } from '#/components/upload';
+
 import { AudioContext } from './components/audio-context';
 import { PictureContext } from './components/picture-context';
 import { VideoContext } from './components/video-context';
 
-const props = defineProps<{ fileType?: UPLOAD_FILE_TYPE; src?: string }>();
+const props = defineProps<{ fileType: UPLOAD_FILE_TYPE; src?: string }>();
 
 const text = computed(() => {
   switch (props.fileType) {
@@ -37,18 +38,18 @@ const text = computed(() => {
       trigger="click"
     >
       <template #content>
-        <div class="w-[120px]">
+        <div class="flex size-[120px] items-center justify-center">
           <AudioContext
             v-if="fileType === UPLOAD_FILE_TYPE.AUDIO"
-            :src="props.src!"
+            :src="props.src"
           />
           <VideoContext
             v-if="fileType === UPLOAD_FILE_TYPE.VIDEO"
-            :src="props.src!"
+            :src="props.src"
           />
           <PictureContext
             v-if="fileType === UPLOAD_FILE_TYPE.PICTURE"
-            :src="props.src!"
+            :src="props.src"
           />
         </div>
       </template>

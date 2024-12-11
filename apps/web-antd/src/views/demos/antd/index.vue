@@ -1,23 +1,26 @@
 <script lang="ts" setup>
 import { Page } from '@vben/common-ui';
 
-import { defaultFormConfig, useVbenForm } from '#/adapter/form';
+import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { UPLOAD_FILE_TYPE } from '#/components/upload';
 
-const [Form] = useVbenForm({
-  ...defaultFormConfig,
-  schema: [
+const gridOptions: VxeGridProps = {
+  columns: [
     {
-      component: 'Upload',
-      componentProps: {
-        fileType: UPLOAD_FILE_TYPE.PICTURE,
-        maxSize: 200,
-        aspectRatio: 1,
+      title: '图片',
+      width: 100,
+      field: 'image',
+      cellRender: {
+        name: 'CellFile',
+        props: { fileType: UPLOAD_FILE_TYPE.PICTURE },
       },
-      fieldName: 'image',
-      label: '上传文件',
     },
   ],
+  data: [{ image: 'http://10.0.15.0:8888/file/image.png' }],
+};
+
+const [Grid] = useVbenVxeGrid({
+  gridOptions,
 });
 </script>
 
@@ -26,6 +29,6 @@ const [Form] = useVbenForm({
     description="支持多语言，主题功能集成切换等"
     title="Ant Design Vue组件使用演示"
   >
-    <Form />
+    <Grid />
   </Page>
 </template>

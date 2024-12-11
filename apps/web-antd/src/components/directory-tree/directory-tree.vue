@@ -69,7 +69,6 @@ defineExpose({
   <Drawer
     v-model:open="drawerOpen"
     destroy-on-close
-    get-container="#uploadFile"
     placement="left"
     root-class-name="absolute"
   >

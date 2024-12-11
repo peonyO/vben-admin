@@ -11,10 +11,9 @@ import { Button, Card, message } from 'ant-design-vue';
 import { storeToRefs } from 'pinia';
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
-import { type CommonApi, getFileListApi } from '#/api';
+import { DirectoryTree } from '#/components/directory-tree';
+import { PopoverPreviewFile } from '#/components/popover-preview-file';
 
-import { DirectoryTree } from '../../../directory-tree';
-import { PopoverPreviewFile } from '../../../popover-preview-file';
 import { useLibStore } from './store';
 
 // 定义组件的 Props 接口
@@ -41,7 +40,7 @@ onMounted(() => {
 // #endregion
 
 // #region Grid 表格
-const gridOptions: VxeGridProps<CommonApi.FileListResult> = {
+const gridOptions: VxeGridProps = {
   columns: [
     { align: 'center', title: '请选择', type: 'checkbox', width: 80 },
     {
@@ -67,11 +66,6 @@ const gridOptions: VxeGridProps<CommonApi.FileListResult> = {
   sortConfig: {
     multiple: true,
   },
-  proxyConfig: {
-    ajax: {
-      query: gridQuery,
-    },
-  },
 };
 
 const formOptions: VbenFormProps = {
@@ -96,18 +90,7 @@ watch(
   },
 );
 
-async function gridQuery({ page }: any, formValues: any) {
-  const { currentPage: pageNo, pageSize } = page;
-  return getFileListApi({
-    pageNo,
-    pageSize,
-    ...formValues,
-    filesTypeId: selectKey.value,
-    filesType: props.fileType,
-  });
-}
-
-function checkMethod({ row }: { row: CommonApi.FileListResult }) {
+function checkMethod({ row }: { row: any }) {
   const reserveArr = gridApi.grid.getCheckboxReserveRecords(false) || [];
   const currentArr = gridApi.grid.getCheckboxRecords() || [];
   const arr = [...reserveArr, ...currentArr];

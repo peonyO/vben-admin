@@ -3,11 +3,10 @@ import { onMounted, onUnmounted, ref } from 'vue';
 
 import { MdiPause, MdiPlay } from '@vben/icons';
 
+import dayjs from 'dayjs';
 import { Howl } from 'howler';
 
-import { formatSecondsToHHMMSS } from '#/shared';
-
-const props = defineProps<{ src: string }>();
+const props = defineProps<{ src?: string }>();
 
 const audioContext = ref<Howl>();
 
@@ -27,18 +26,23 @@ const playStatus = ref<'pause' | 'play'>('pause');
 const currentTime = ref<string>('00:00');
 
 function initAudio() {
+  if (!props.src) return;
   const defaultConfig = { autoplay: false, html5: true, preload: true };
   audioContext.value = new Howl({
     ...defaultConfig,
-    ...props,
+    src: props.src,
+    onload: audioLoad,
     onplay() {
+      playStatus.value = 'play';
       step();
     },
+    onpause() {
+      playStatus.value = 'pause';
+    },
+    onend() {
+      playStatus.value = 'pause';
+    },
   });
-  audioContext.value.once('load', audioLoad);
-  audioContext.value.on('pause', () => (playStatus.value = 'pause'));
-  audioContext.value.on('play', () => (playStatus.value = 'play'));
-  audioContext.value.on('end', () => (playStatus.value = 'pause'));
 }
 
 function audioLoad() {
@@ -70,6 +74,20 @@ function handleClickAudio() {
       break;
     }
   }
+}
+
+/**
+ * 秒 转换为 HH:MM:SS
+ * @param seconds
+ * @returns HH:MM:SS || MM:SS
+ */
+function formatSecondsToHHMMSS(seconds?: number) {
+  if (!seconds) return '00:00';
+  const d = dayjs.duration(seconds, 'seconds');
+  const hours = String(d.hours()).padStart(2, '0');
+  const minutes = String(d.minutes()).padStart(2, '0');
+  const secs = String(d.seconds()).padStart(2, '0');
+  return `${Number(hours) ? `${hours}:` : ''}${minutes}:${secs}`;
 }
 </script>
 

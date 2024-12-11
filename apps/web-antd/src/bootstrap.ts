@@ -7,12 +7,18 @@ import '@vben/styles';
 import '@vben/styles/antd';
 
 import { useTitle } from '@vueuse/core';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 
 import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import App from './app.vue';
 import { router } from './router';
+
+import 'video.js/dist/video-js.css';
+
+dayjs.extend(duration);
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器

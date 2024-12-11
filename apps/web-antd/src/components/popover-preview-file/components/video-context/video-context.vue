@@ -3,6 +3,8 @@ import type Player from 'video.js/dist/types/player';
 
 import { onMounted, ref } from 'vue';
 
+import { cn } from '@vben/utils';
+
 import videojs from 'video.js';
 
 const props = defineProps<{
@@ -27,5 +29,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <video ref="videoPlayer" :class="` ${className} video-js size-full`"></video>
+  <video ref="videoPlayer" :class="cn('video-js size-full', className)"></video>
 </template>

@@ -6,9 +6,8 @@ import { isHttpUrl, isString } from '@vben/utils'; // 导入工具函数
 
 import { Progress } from 'ant-design-vue'; // 导入进度条组件
 
-import { uploadFileApi } from '#/api'; // 导入上传文件的 API
+import { PopoverPreviewFile } from '#/components/popover-preview-file';
 
-import { PopoverPreviewFile } from '../../popover-preview-file';
 import { UPLOAD_FILE_TYPE } from '../helper';
 import { type FileItem, UPLOAD_FILE_STATUS } from '../types';
 
@@ -63,19 +62,13 @@ const statusColor = computed(() => {
 async function upload() {
   try {
     if (!file.value) return; // 如果没有文件则返回
-    const { previewUrl } = await uploadFileApi(
-      file.value.file as File, // 上传文件
-      {},
-      (progressEvent) => {
-        // 更新上传进度
-        progress.value = (progressEvent.progress || 0) * 100;
-      },
-    );
-    // 模拟延迟处理
+    // TODO 上传文件
+
+    // 为了兼容动画执行完成
     setTimeout(() => {
       if (!file.value) return; // 如果没有文件则返回
       uploadStatus.value = UPLOAD_FILE_STATUS.SUCCESS; // 设置状态为成功
-      file.value = { ...file.value, file: previewUrl }; // 更新文件信息
+      file.value = { ...file.value, file: '' }; // 更新文件信息
     }, 240);
   } catch {
     uploadStatus.value = UPLOAD_FILE_STATUS.FAIL; // 上传失败时设置状态为失败
