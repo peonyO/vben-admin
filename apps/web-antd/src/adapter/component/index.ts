@@ -33,7 +33,6 @@ import {
   Textarea,
   TimePicker,
   TreeSelect,
-  Upload,
 } from 'ant-design-vue';
 
 const withDefaultPlaceholder = <T extends Component>(
@@ -72,7 +71,6 @@ export type ComponentType =
   | 'Textarea'
   | 'TimePicker'
   | 'TreeSelect'
-  | 'Upload'
   | BaseFormComponentType;
 
 async function initComponentAdapter() {
@@ -146,7 +144,6 @@ async function initComponentAdapter() {
     Textarea: withDefaultPlaceholder(Textarea, 'input'),
     TimePicker,
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
-    Upload,
   };
 
   // 将组件注册到全局共享状态中

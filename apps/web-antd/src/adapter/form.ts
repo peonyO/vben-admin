@@ -41,7 +41,18 @@ setupVbenForm<ComponentType>({
 
 const useVbenForm = useForm<ComponentType>;
 
-export { useVbenForm, z };
+const defaultFormConfig: VbenFormProps = {
+  actionWrapperClass: 'text-center',
+  commonConfig: {
+    labelWidth: 100,
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  layout: 'horizontal',
+};
+
+export { defaultFormConfig, useVbenForm, z };
 
 export type VbenFormSchema = FormSchema<ComponentType>;
 export type { VbenFormProps };
