@@ -45,31 +45,6 @@ export namespace CommonApi {
     uploaderId: null | number;
     videoDuration: null | number;
   }
-
-  export interface ApkInfoResult {
-    anyDensity: boolean;
-    compileSdkVersion: string;
-    compileSdkVersionCodename: string;
-    featureSplit: boolean;
-    icon: string;
-    isolatedSplits: boolean;
-    label: string;
-    largeScreens: boolean;
-    minSdkVersion: string;
-    name: string;
-    normalScreens: boolean;
-    packageName: string;
-    permissions: string[];
-    platformBuildVersionCode: string;
-    platformBuildVersionName: string;
-    smallScreens: boolean;
-    splitRequired: boolean;
-    targetSdkVersion: string;
-    usesPermissions: string[];
-    versionCode: number;
-    versionName: string;
-    fileMd5: string;
-  }
 }
 
 /**
@@ -79,11 +54,7 @@ export async function uploadFileApi(
   file: File,
   onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
 ) {
-  return requestClient.upload<CommonApi.UploadFileResult>(
-    '/common/upload',
-    { file },
-    { onUploadProgress },
-  );
+  return requestClient.upload('/common/upload', { file }, { onUploadProgress });
 }
 
 /**
@@ -103,11 +74,4 @@ export async function getFileListApi(params: CommonApi.FileListParams) {
     '/file/fifiles/page',
     { params },
   );
-}
-
-/**
- * 获取APK信息
- */
-export async function getApkInfoApi(data: CommonApi.UploadFileResult) {
-  return requestClient.post<CommonApi.ApkInfoResult>('/common/appinfo', data);
 }

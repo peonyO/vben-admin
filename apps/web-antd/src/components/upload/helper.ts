@@ -8,6 +8,7 @@ import { MdiCloudUpload, MdiFolderUpload } from '@vben/icons';
 
 import { message } from 'ant-design-vue';
 
+import { z } from '#/adapter/form';
 import { uploadFileApi } from '#/api';
 
 /**
@@ -140,7 +141,7 @@ export async function uploadFile(
   const result = await uploadFileApi(file, onUploadProgress);
 
   // 返回上传后的预览 URL
-  return result.previewUrl;
+  return result.data.previewUrl;
 }
 
 // 获取当前时间戳
@@ -153,4 +154,11 @@ let index = 0; // 用于生成唯一 ID 的索引
  */
 export function getUid() {
   return `upload-${now}-${++index}`; // 返回唯一 ID
+}
+
+/** upload form rules 当 value 中包含 file 代表正在上传或者上传失败 */
+export function fileUploadRule() {
+  return z.string().refine((value) => !value.includes('file'), {
+    message: '请检查文件是否上传成功！',
+  });
 }
